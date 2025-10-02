@@ -1,0 +1,409 @@
+﻿<Window x:Class="Digital_Library.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Digital_Library"
+        mc:Ignorable="d"
+        Title="Электронная библиотека" Height="450" Width="600"
+        MinHeight="450" MinWidth="600" Loaded="Window_Loaded">
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid x:Name="ProfileMenu" Grid.RowSpan="3" HorizontalAlignment="Left">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Width" Value="0"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding isProfileMenuOpen}" Value="false">
+                            <Setter Property="Width" Value="300"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Border Background="Black"/>
+        </Grid>
+
+        <Border BorderThickness="0,0,0,1" BorderBrush="Black">
+            <!--Верхняя панель-->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="1" Margin="20,10,20,10" BorderThickness="1" BorderBrush="Black"
+        CornerRadius="12">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBox x:Name="SearchTextBox" Text="" Background="Transparent" 
+                                 BorderThickness="0" VerticalAlignment="Center"
+                                 AcceptsTab="False" Margin="5" TextChanged="SearchTextBox_TextChanged">
+
+                        </TextBox>
+                        <TextBlock x:Name="PlaceholderText" Text=" Для поиска начните ввод здесь."
+                                   Margin="5" VerticalAlignment="Center"
+                                   Foreground="Gray" IsHitTestVisible="False">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Text, ElementName=SearchTextBox}" Value="">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+
+                        <Button Grid.Column="1" BorderThickness="0" Background="Transparent">
+                            <Image Source="pack://application:,,,/icons/search.png" Margin="5"/>
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <Button Grid.Column="2" HorizontalAlignment="Right" Background="Transparent"
+                        BorderThickness="0"  Margin="10" Click="AccountButton_Click">
+                    <Border BorderThickness="1" CornerRadius="10" BorderBrush="Black">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="pack://application:,,,/icons/user.png" Margin="5"/>
+                            <Label x:Name="ProfileLogIn" Content="Вход" Grid.Column="1" Margin="0,0,5,0"/>
+                        </Grid>
+                    </Border>
+                </Button>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Label Content="Каталог:" FontWeight="SemiBold" Margin="10,0,0,0" FontSize="24"/>
+            <ListBox SelectionChanged="CatalogList_SelectionChanged" x:Name="CatalogList" BorderThickness="0" Grid.Row="1"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"> 
+                <ListBox.ItemTemplate>
+                    <ItemContainerTemplate>
+                        <Border Width="250" Height="300" BorderBrush="Black"
+BorderThickness="1" CornerRadius="10" Margin="4">
+                            <Grid Margin="5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="150"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <Image Margin="5" Stretch="Fill" Source="{Binding ImagePath}"/>
+                                <Border Margin="5" Opacity="0.4">
+                                    <Border.Effect>
+                                        <BlurEffect Radius="15"/>
+                                    </Border.Effect>
+                                    <Border.Background>
+                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                            <GradientStop Color="Black" Offset="1"/>
+                                            <GradientStop Color="White" Offset="0"/>
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                </Border>
+
+                                <ItemsControl Margin="7, 80, 7, 7" BorderThickness="0" ItemsSource="{Binding Tags}" VerticalAlignment="Bottom">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <ItemContainerTemplate>
+                                            <Border Margin="1" BorderBrush="Black" BorderThickness="1" CornerRadius="10"
+                    Background="Gray">
+                                                <Label Content="{Binding TagName}" Foreground="White"/>
+                                            </Border>
+                                        </ItemContainerTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <Border Grid.Row="2" BorderThickness="0,1,0,0" 
+        BorderBrush="Black" Margin="5">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Text="{Binding Title}" TextWrapping="WrapWithOverflow" FontWeight="SemiBold"/>
+                                        <TextBlock Grid.Row="1" Text="{Binding Description}" TextWrapping="WrapWithOverflow"/>
+                                        <Border Grid.RowSpan="2" VerticalAlignment="Bottom" Background="LightBlue"
+                HorizontalAlignment="Right" Margin="5" BorderBrush="Black"
+                BorderThickness="1" CornerRadius="10"
+                >
+                                            <Grid >
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <Label Content="Читать"/>
+                                                <Image Grid.Column="1" Source="pack://application:,,,/icons/reading-book.png"
+                       Width="20" Margin="0,0,5,0"/>
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+
+                            </Grid>
+                        </Border>
+                    </ItemContainerTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel HorizontalAlignment="Center"/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+            </ListBox>
+        </Grid>
+
+        <Grid x:Name="ProfileGrid" Grid.RowSpan="2" Background="White" HorizontalAlignment="Right"
+              Width="300">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.ColumnSpan="3" BorderThickness="0,0,0,1" BorderBrush="Black"
+                        Background="White"/>
+
+                <TextBlock x:Name="NicknameTBlock" HorizontalAlignment="Right"
+                           VerticalAlignment="Center" FontWeight="SemiBold"/>
+                <TextBox x:Name="NicknameTBox" Background="Transparent" BorderThickness="0" HorizontalAlignment="Right"
+                           VerticalAlignment="Center" FontWeight="SemiBold"/>
+                <Image Grid.Column="1" HorizontalAlignment="Left" Source="pack://application:,,,/icons/edit.png"
+                       Width="20" Height="20" Margin="10" MouseDown="Image_MouseDown"/>
+            </Grid>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.ColumnSpan="3" BorderThickness="0,0,0,1" BorderBrush="Black" Width="150"/>
+
+                <Label Content="email:" FontWeight="Bold" VerticalAlignment="Center"/>
+                <TextBlock x:Name="EmailTBlock" Grid.Column="1" HorizontalAlignment="Left"
+               VerticalAlignment="Center" Margin="10,0,0,0"/>
+                <TextBox x:Name="EmailTBox" Background="Transparent" BorderThickness="0" Grid.Column="1" HorizontalAlignment="Left"
+               VerticalAlignment="Center" Margin="10,0,0,0"/>
+            </Grid>
+            
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.ColumnSpan="3" BorderThickness="0,0,0,1" BorderBrush="Black" Width="150"/>
+
+                <Label Content="Имя:" FontWeight="Bold" VerticalAlignment="Center"/>
+                <TextBlock x:Name="NameTBlock" Grid.Column="1" HorizontalAlignment="Left"
+    VerticalAlignment="Center" Margin="10,0,0,0"/>
+                <TextBox x:Name="NameTBox" Background="Transparent" BorderThickness="0" Grid.Column="1" HorizontalAlignment="Left"
+    VerticalAlignment="Center" Margin="10,0,0,0"/>
+            </Grid>
+
+            <Grid Grid.Row="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.ColumnSpan="3" BorderThickness="0,0,0,1" BorderBrush="Black" Width="150"/>
+
+                <Label Content="Фамилия:" FontWeight="Bold" VerticalAlignment="Center"/>
+                <TextBlock x:Name="LastNameTBlock" Grid.Column="1"  HorizontalAlignment="Left"
+    VerticalAlignment="Center" Margin="10,0,0,0"/>
+                <TextBox x:Name="LastNameTBox" Background="Transparent" BorderThickness="0" Grid.Column="1" HorizontalAlignment="Left"
+    VerticalAlignment="Center" Margin="10,0,0,0"/>
+            </Grid>
+            
+            <Grid Grid.Row="4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Border Grid.ColumnSpan="3" BorderThickness="0,0,0,1" BorderBrush="Black" Width="150"/>
+
+                <Label Content="Дата регистрации:" FontWeight="Bold" VerticalAlignment="Center"/>
+                <TextBlock x:Name="DateRegistrationTBlock" Grid.Column="1" HorizontalAlignment="Left"
+                           VerticalAlignment="Center" Margin="10,0,0,0"/>
+            </Grid>
+
+
+            <Button x:Name="OpenAP" Grid.Row="6" Content="Открыть панель управления БД" 
+                    FontWeight="SemiBold" Margin="35,5,35,5" Visibility="Collapsed"
+                    Click="OpenAP_Click"/>
+
+            <Border Grid.RowSpan="9" BorderBrush="Black"
+        BorderThickness="1,0,0,0" HorizontalAlignment="Left"/>
+
+            <Button HorizontalAlignment="Left" Background="Transparent"
+                    BorderThickness="0" Margin="7" Click="AccountButton_Click">
+                <Image Source="pack://Application:,,,/icons/left-arrow.png"/>
+            </Button>
+
+            <Label Content="Выйти из аккаунта" Grid.RowSpan="8" HorizontalAlignment="Center"
+                   VerticalAlignment="Bottom" Margin="15" Foreground="Red" FontSize="16" FontWeight="SemiBold"
+                   MouseDown="Label_MouseDown"/>
+
+        </Grid>
+
+        <Grid x:Name="DocumentInfo" Grid.RowSpan="3" Background="White" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="250"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="30"/>
+                    </Grid.RowDefinitions>
+
+                    <Image x:Name="InfoImage" Margin="10" Source="{Binding ImagePath}"
+       VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Button x:Name="ReadBook" VerticalAlignment="Bottom" HorizontalAlignment="Center" 
+Margin="0,0,0,5" Click="ReadBook_Click" >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="ReadBookText" Text="Скачать"/>
+                            <ProgressBar Grid.Column="1" x:Name="DownloadProgressBar" Width="60"
+                                         Height="10" Margin="10,0,0,0" Foreground="#FFFFC700" />
+
+                        </Grid>
+                    </Button>
+
+                    <Grid Grid.Row="1" HorizontalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock x:Name="Author" FontWeight="Bold"
+                                   FontSize="18" HorizontalAlignment="Center"/>
+                        <TextBlock x:Name="Year" Grid.Column="1" FontWeight="Bold"
+                                   FontSize="18" Margin="15,0,0,0"/>
+                    </Grid>
+                </Grid>
+
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.5*"/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock x:Name="DocumentTitle" Text="Чистый код" TextWrapping="WrapWithOverflow" FontSize="18"
+                               FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                    <Border BorderBrush="Black" BorderThickness="0,0,0,2" Margin="25,0,25,0"/>
+                    <TextBlock Grid.Row="1" TextWrapping="WrapWithOverflow" FontWeight="SemiBold" FontSize="14"
+                               x:Name="DocumentAlternativeTitle" Text="Clean Code: A Handbook of Agile Software Craftsman"/>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="ISBN" FontWeight="Bold" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                            <TextBlock x:Name="ISBN" Grid.Row="1" Text="978-5-4461-1100-7"  FontWeight="Bold" HorizontalAlignment="Center"/>
+                        </Grid>
+
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Text="ISSN" FontWeight="Bold" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                            <TextBlock x:Name="ISSN"  Grid.Row="1" Text="Отсутствует"  FontWeight="Bold" HorizontalAlignment="Center"/>
+                        </Grid>
+
+
+                    </Grid>
+                </Grid>
+
+            </Grid>
+
+            <Border BorderThickness="0,0,0,2" VerticalAlignment="Bottom" BorderBrush="Black" Margin="50, 0, 50, 0"/>
+
+
+            <ScrollViewer VerticalScrollBarVisibility="Hidden" Grid.Row="1" HorizontalScrollBarVisibility="Disabled" Margin="0,10,0,0">
+                <StackPanel Orientation="Vertical" Margin="0,0,0,0">
+                    <TextBlock Text="Теги" FontSize="18" FontWeight="Bold" Margin="10,0,0,0"/>
+                    <ItemsControl x:Name="InfoTags" Margin="5, 5, 5, 0" BorderThickness="0" ItemsSource="{Binding Tags}" VerticalAlignment="Bottom">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <ItemContainerTemplate>
+                                <Border Margin="5" CornerRadius="15" Height="30" BorderThickness="1"
+                                        Background="LightGray" BorderBrush="Black">
+                                    <Label MinWidth="45" Content="{Binding TagName}" HorizontalContentAlignment="Center"/>
+                                </Border>
+                            </ItemContainerTemplate>
+                        </ItemsControl.ItemTemplate>
+                     </ItemsControl>
+                    <TextBlock Text="Описание" Margin="10,10,0,0" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock x:Name="Description" Margin="5,2,0,0" Text="Создание, анализ и рефакторинг кода на Java. Приме..." FontSize="14"/>
+                </StackPanel>
+            </ScrollViewer>
+
+
+            <Button Grid.RowSpan="2" VerticalAlignment="Top" 
+                    HorizontalAlignment="Left" Margin="10"
+                    BorderThickness="0" Background="Transparent" Click="Button_Click">
+                <Image Source="pack://Application:,,,/icons/left-arrow.png" Height="20"/>
+            </Button>
+
+        </Grid>
+        
+    </Grid>
+</Window>
